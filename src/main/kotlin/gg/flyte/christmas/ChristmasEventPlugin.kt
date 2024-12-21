@@ -221,7 +221,7 @@ class ChristmasEventPlugin : JavaPlugin() {
         repeatingTask(5, TimeUnit.MINUTES) {
             val message = listOf(
                 "<#edd900>ꜰᴇᴇʟɪɴɢ ɢᴇɴᴇʀᴏᴜs? <gradient:#A3ADFF:#00FFF4>ᴅᴏɴᴀᴛɪᴏɴs ᴄᴀɴ ᴄʜᴀɴɢᴇ ᴛʜᴇ ɢᴀᴍᴇ - ᴀɴᴅ ɪᴛ's ꜰᴏʀ ᴀ ɢʀᴇᴀᴛ ᴄᴀᴜsᴇ!",
-                "<#edd900>ᴄᴀɴ'ᴛ ᴘʟᴀʏ ᴀɴʏᴍᴏʀᴇ? <gradient:#A3ADFF:#00FFF4>ʏᴏᴜ ᴄᴀɴ sᴛɪʟʟ ᴘʟᴀʏ ᴀ ᴘᴀʀᴛ – ᴅᴏɴᴀᴛᴇ ɴᴏᴡ!",
+                "<#edd900>ᴄᴀɴ'ᴛ ᴘʟᴀʏ ᴀɴʏᴍᴏʀᴇ? <gradient:#A3ADFF:#00FFF4>ʏᴏᴜ ᴄᴀɴ sᴛɪʟʟ ᴘʟᴀʏ ʏᴏᴜʀ ᴘᴀʀᴛ – ᴅᴏɴᴀᴛᴇ ɴᴏᴡ!",
                 "<#edd900>ᴇᴠᴇʀʏ ᴅᴏɴᴀᴛɪᴏɴ ɪs ᴛʀɪᴘʟᴇ ᴍᴀᴛᴄʜᴇᴅ! <gradient:#A3ADFF:#00FFF4>sᴏ $10 ᴍᴇᴀɴs $40 ꜰᴏʀ ᴀ ɢʀᴇᴀᴛ ᴄᴀᴜsᴇ.",
                 "<#edd900>ᴡᴀɴᴛ ʀᴇᴠᴇɴɢᴇ? <gradient:#A3ADFF:#00FFF4>ᴀ ᴅᴏɴᴀᴛɪᴏɴ ᴍɪɢʜᴛ ᴊᴜsᴛ sʜᴀᴋᴇ ᴛʜɪɴɢs ᴜᴘ ꜰᴏʀ ᴛʜᴏsᴇ sᴛɪʟʟ ᴀʟɪᴠᴇ!",
                 "<#edd900>ᴍᴀᴋᴇ ᴀ ᴅᴏɴᴀᴛɪᴏɴ. <gradient:#A3ADFF:#00FFF4>ᴍᴀᴋᴇ sᴏᴍᴇ ᴍᴀʏʜᴇᴍ. ᴍᴀᴋᴇ ᴀ ᴅɪꜰꜰᴇʀᴇɴᴄᴇ!",
