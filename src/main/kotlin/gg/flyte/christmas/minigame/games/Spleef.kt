@@ -170,8 +170,8 @@ class Spleef : EventMiniGame(GameConfig.SPLEEF) {
 
                 if (gameTime % 30 == 0) {
                     remainingPlayers().forEach {
-                        it.sendMessage("<green>+1 ᴘᴏɪɴᴛ ꜰᴏʀ sᴜʀᴠɪᴠɪɴɢ 30 sᴇᴄᴏɴᴅs!".style())
-                        eventController().addPoints(it.uniqueId, 1)
+                        it.sendMessage("<green>+5 ᴘᴏɪɴᴛs ꜰᴏʀ sᴜʀᴠɪᴠɪɴɢ 30 sᴇᴄᴏɴᴅs!".style())
+                        eventController().addPoints(it.uniqueId, 5)
                     }
                 }
 
@@ -224,7 +224,10 @@ class Spleef : EventMiniGame(GameConfig.SPLEEF) {
         when (remainingPlayers().size) {
             1 -> {
                 formattedWinners[player.uniqueId] = value
+                eventController().addPoints(player.uniqueId, 10)
+
                 formattedWinners[remainingPlayers().first().uniqueId] = "$value (1ѕᴛ ᴘʟᴀᴄᴇ!)"
+                eventController().addPoints(remainingPlayers().first().uniqueId, 15)
 
                 // formattedWinners currently have keys in order of elimination, reverse it to get actual winners.
                 LinkedHashMap(formattedWinners.toList().asReversed().toMap()).apply {
@@ -234,7 +237,10 @@ class Spleef : EventMiniGame(GameConfig.SPLEEF) {
                 endGame()
             }
 
-            2 -> formattedWinners[player.uniqueId] = value
+            2 -> {
+                formattedWinners[player.uniqueId] = value
+                eventController().addPoints(player.uniqueId, 5)
+            }
         }
     }
 

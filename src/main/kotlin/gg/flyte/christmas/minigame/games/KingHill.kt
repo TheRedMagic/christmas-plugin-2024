@@ -85,7 +85,7 @@ class KingHill : EventMiniGame(GameConfig.KING_OF_THE_HILL) {
             thrownAroundBossBar = BossBar.bossBar("<game_colour><b>ᴛʜʀᴏᴡɴ ᴀʀᴏᴜɴᴅ".style(), 1.0F, BossBar.Color.WHITE, BossBar.Overlay.PROGRESS)
 
             Util.runAction(PlayerType.PARTICIPANT) {
-                preparePlayer(it)
+                it.teleport(gameConfig.spawnPoints.random().randomLocation())
                 it.title(
                     Component.empty(), "<game_colour>ᴘᴠᴘ ᴇɴᴀʙʟᴇᴅ!".style(),
                     titleTimes(Duration.ZERO, Duration.ofSeconds(2), Duration.ofMillis(300))
@@ -169,7 +169,7 @@ class KingHill : EventMiniGame(GameConfig.KING_OF_THE_HILL) {
         donationEventsEnabled = false
 
         Util.runAction(PlayerType.PARTICIPANT) { it.teleport(gameConfig.spawnPoints.random().randomLocation()) }
-        for (entry in timeOnHill) eventController().addPoints(entry.key, entry.value)
+        for (entry in timeOnHill) eventController().addPoints(entry.key, entry.value * 5)
 
         val (first) = timeOnHill.entries
             .sortedByDescending { it.value }

@@ -149,6 +149,7 @@ class Avalanche : EventMiniGame(GameConfig.AVALANCHE) {
             }
         }
 
+        if (roundNumber != 1) remainingPlayers().forEach { eventController().addPoints(it.uniqueId, 10) }
     }
 
     private fun prepareAvalanche() {
@@ -268,7 +269,10 @@ class Avalanche : EventMiniGame(GameConfig.AVALANCHE) {
         when (remainingPlayers().size) {
             1 -> {
                 formattedWinners[player.uniqueId] = value
+                eventController().addPoints(player.uniqueId, 10)
+
                 formattedWinners[remainingPlayers().first().uniqueId] = "$value (1ѕᴛ ᴘʟᴀᴄᴇ!)"
+                eventController().addPoints(remainingPlayers().first().uniqueId, 15)
 
                 // formattedWinners currently have keys in order of elimination, reverse it to get actual winners.
                 LinkedHashMap(formattedWinners.toList().asReversed().toMap()).apply {
@@ -278,7 +282,10 @@ class Avalanche : EventMiniGame(GameConfig.AVALANCHE) {
                 endGame()
             }
 
-            2 -> formattedWinners[player.uniqueId] = value
+            2 -> {
+                formattedWinners[player.uniqueId] = value
+                eventController().addPoints(player.uniqueId, 5)
+            }
         }
     }
 
@@ -300,7 +307,6 @@ class Avalanche : EventMiniGame(GameConfig.AVALANCHE) {
 
         val winnerNPCs = mutableListOf<WorldNPC>()
         val winnerPlayer = remainingPlayers().first()
-        eventController().addPoints(winnerPlayer.uniqueId, 15)
 
         tasks += repeatingTask(10) {
             repeat(10) {

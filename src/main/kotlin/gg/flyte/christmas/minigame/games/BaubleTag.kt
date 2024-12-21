@@ -86,7 +86,7 @@ class BaubleTag : EventMiniGame(GameConfig.BAUBLE_TAG) {
 
         if (regroup) remainingPlayers().forEach { it.teleport(regroupPoint) }
 
-        if (secondsForRound != 10) secondsForRound = 60 - roundNumber * 10
+        if (secondsForRound != 10) secondsForRound = 60 - (roundNumber * 10)
 
         tasks += repeatingTask(1, TimeUnit.SECONDS) {
             Bukkit.getOnlinePlayers().forEach {
@@ -116,6 +116,8 @@ class BaubleTag : EventMiniGame(GameConfig.BAUBLE_TAG) {
                 tagger.compassTarget = tagger.location.getNearbyPlayers(500.0, 500.0, 500.0) { it != tagger }.first().location
             }
         }
+
+        if (roundNumber != 1) remainingPlayers().forEach { eventController().addPoints(it.uniqueId, 10) }
     }
 
     override fun eliminate(player: Player, reason: EliminationReason) {
@@ -128,7 +130,10 @@ class BaubleTag : EventMiniGame(GameConfig.BAUBLE_TAG) {
         when (remainingPlayers().size) {
             1 -> {
                 formattedWinners[player.uniqueId] = "2ɴᴅ ᴘʟᴀᴄᴇ!"
+                eventController().addPoints(player.uniqueId, 10)
+
                 formattedWinners[remainingPlayers().first().uniqueId] = "1ѕᴛ ᴘʟᴀᴄᴇ!"
+                eventController().addPoints(remainingPlayers().first().uniqueId, 15)
 
                 // formattedWinners currently have keys in order of elimination, reverse it to get actual winners.
                 LinkedHashMap(formattedWinners.toList().asReversed().toMap()).apply {
@@ -138,7 +143,10 @@ class BaubleTag : EventMiniGame(GameConfig.BAUBLE_TAG) {
                 endGame()
             }
 
-            2 -> formattedWinners[player.uniqueId] = "3ѕᴛ ᴘʟᴀᴄᴇ!"
+            2 -> {
+                formattedWinners[player.uniqueId] = "3ʀᴅ ᴘʟᴀᴄᴇ!"
+                eventController().addPoints(player.uniqueId, 5)
+            }
         }
     }
 
@@ -146,7 +154,6 @@ class BaubleTag : EventMiniGame(GameConfig.BAUBLE_TAG) {
         tasks.forEach { it?.cancel() } // this will cancel all game tasks.
         donationEventsEnabled = false
 
-        eventController().addPoints(remainingPlayers().first().uniqueId, 15)
         Util.runAction(PlayerType.PARTICIPANT) {
             it.walkSpeed = 0.2F
             it.hideBossBar(glowingBossBar)

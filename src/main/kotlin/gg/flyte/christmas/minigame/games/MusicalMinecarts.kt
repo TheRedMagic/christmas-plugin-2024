@@ -165,7 +165,7 @@ class MusicalMinecarts : EventMiniGame(GameConfig.MUSICAL_MINECARTS) {
             }
         }
 
-        remainingPlayers().forEach { eventController().addPoints(it.uniqueId, 10) }
+        if (roundNumber != 1) remainingPlayers().forEach { eventController().addPoints(it.uniqueId, 10) }
     }
 
     private fun prepareElimination() {
@@ -262,8 +262,10 @@ class MusicalMinecarts : EventMiniGame(GameConfig.MUSICAL_MINECARTS) {
         when (remainingPlayers().size) {
             1 -> {
                 formattedWinners[player.uniqueId] = value
+                eventController().addPoints(player.uniqueId, 10)
+
                 formattedWinners[remainingPlayers().first().uniqueId] = "$value (1ѕᴛ ᴘʟᴀᴄᴇ!)"
-                remainingPlayers().first().teleport(gameConfig.spawnPoints.random().randomLocation())
+                eventController().addPoints(remainingPlayers().first().uniqueId, 15)
 
                 // formattedWinners currently have keys in order of elimination, reverse it to get actual winners.
                 LinkedHashMap(formattedWinners.toList().asReversed().toMap()).apply {
@@ -273,19 +275,21 @@ class MusicalMinecarts : EventMiniGame(GameConfig.MUSICAL_MINECARTS) {
                 endGame()
             }
 
-            2 -> formattedWinners[player.uniqueId] = value
+            2 -> {
+                formattedWinners[player.uniqueId] = value
+                eventController().addPoints(player.uniqueId, 5)
+            }
         }
     }
 
     override fun endGame() {
-        hasEnded = true
         tasks.forEach { it?.cancel() } // this will cancel all game tasks.
+        hasEnded = true
         donationEventsEnabled = false
 
-        val winner = remainingPlayers().first()
-        eventController().addPoints(winner.uniqueId, 15)
-
         Util.runAction(PlayerType.PARTICIPANT, PlayerType.OPTED_OUT) { viewer -> currentBossBar?.let { viewer.hideBossBar(it) } }
+
+        val winner = remainingPlayers().first()
         doWinAnimation(winner)
     }
 
@@ -562,12 +566,8 @@ class MusicalMinecarts : EventMiniGame(GameConfig.MUSICAL_MINECARTS) {
 
     override fun handleDonation(tier: DonationTier, donorName: String?) {
         when (tier) {
-            DonationTier.LOW -> {
-
-            }
-            DonationTier.MEDIUM -> {
-
-            }
+            DonationTier.LOW -> {}
+            DonationTier.MEDIUM -> {}
 
             DonationTier.HIGH -> {
                 val stephen = remainingPlayers().find { it.uniqueId == UUID.fromString("69e8f7d5-11f9-4818-a3bb-7f237df32949") }

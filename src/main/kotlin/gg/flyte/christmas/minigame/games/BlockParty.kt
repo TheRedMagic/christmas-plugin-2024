@@ -158,7 +158,7 @@ class BlockParty() : EventMiniGame(GameConfig.BLOCK_PARTY) {
             }
         }
 
-        remainingPlayers().forEach { eventController().addPoints(it.uniqueId, 10) }
+        if (roundNumber != 1) remainingPlayers().forEach { eventController().addPoints(it.uniqueId, 10) }
     }
 
     private fun prepareRemoveFloor() {
@@ -278,7 +278,10 @@ class BlockParty() : EventMiniGame(GameConfig.BLOCK_PARTY) {
         when (remainingPlayers().size) {
             1 -> {
                 formattedWinners[player.uniqueId] = value
+                eventController().addPoints(player.uniqueId, 10)
+
                 formattedWinners[remainingPlayers().first().uniqueId] = "$value (1ѕᴛ ᴘʟᴀᴄᴇ!)"
+                eventController().addPoints(remainingPlayers().first().uniqueId, 15)
 
                 // formattedWinners currently have keys in order of elimination, reverse it to get actual winners.
                 LinkedHashMap(formattedWinners.toList().asReversed().toMap()).apply {
@@ -288,7 +291,10 @@ class BlockParty() : EventMiniGame(GameConfig.BLOCK_PARTY) {
                 endGame()
             }
 
-            2 -> formattedWinners[player.uniqueId] = value
+            2 -> {
+                formattedWinners[player.uniqueId] = value
+                eventController().addPoints(player.uniqueId, 5)
+            }
         }
     }
 
@@ -296,10 +302,9 @@ class BlockParty() : EventMiniGame(GameConfig.BLOCK_PARTY) {
         tasks.forEach { it?.cancel() } // this will cancel all game tasks.
         donationEventsEnabled = false
 
-        val winner = remainingPlayers().first()
-        eventController().addPoints(winner.uniqueId, 15)
-
         Util.runAction(PlayerType.PARTICIPANT, PlayerType.OPTED_OUT) { viewer -> currentBossBar?.let { viewer.hideBossBar(it) } }
+
+        val winner = remainingPlayers().first()
         doWinAnimation(winner)
     }
 

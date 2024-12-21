@@ -10,6 +10,7 @@ import gg.flyte.christmas.minigame.world.MapSinglePoint
 import gg.flyte.christmas.util.*
 import gg.flyte.twilight.event.event
 import gg.flyte.twilight.extension.playSound
+import gg.flyte.twilight.scheduler.delay
 import gg.flyte.twilight.scheduler.repeatingTask
 import net.kyori.adventure.text.Component
 import net.minecraft.core.BlockPos
@@ -69,35 +70,49 @@ class SledRacing : EventMiniGame(GameConfig.SLED_RACING) {
         player.gameMode = GameMode.ADVENTURE
         player.teleport(gameConfig.spawnPoints.random().randomLocation())
 
-        resetPlayerToLastCheckPoint(player)
+        if (hasStarted) resetPlayerToLastCheckPoint(player)
     }
 
     override fun startGame() {
-        simpleCountdown {
-            hasStarted = true
-            donationEventsEnabled = true
+        remainingPlayers().forEachIndexed { index, player ->
+            player.walkSpeed = 0F
+            player.title(
+                "<game_colour>ᴘʀᴇᴘᴀʀɪɴɢ ʀᴀᴄᴇ...".style(), Component.empty(),
+                titleTimes(Duration.ZERO, Duration.ofSeconds(10), Duration.ofMillis(500))
+            )
+            delay(5 * index) {
+                resetPlayerToLastCheckPoint(player)
+                player.walkSpeed = 0.2F
+                if (index == remainingPlayers().size - 1) {
+                    simpleCountdown {
+                        hasStarted = true
+                        donationEventsEnabled = true
 
-            tasks += repeatingTask(1) {
-                Util.runAction(PlayerType.PARTICIPANT) {
-                    if (it.vehicle is Boat) {
-                        (it.passengers.first() as ArmorStand).setRotation(it.vehicle!!.yaw, 0F)
+                        tasks += repeatingTask(1) {
+                            Util.runAction(PlayerType.PARTICIPANT) {
+                                if (it.vehicle is Boat) {
+                                    (it.passengers.first() as ArmorStand).setRotation(it.vehicle!!.yaw, 0F)
+                                }
+                            }
+                        } // autocorrect armor stand rotation to boat rotation
+
+                        tasks += repeatingTask(40) {
+                            Util.runAction(PlayerType.PARTICIPANT) { it.sendActionBar("<game_colour>ᴘʀᴇss <#6b6b6b><b><key:key.sneak></b></#6b6b6b> ᴛᴏ ʀᴇsᴇᴛ ᴛᴏ ʏᴏᴜʀ ᴄʜᴇᴄᴋᴘᴏɪɴᴛ".style()) }
+                        }
+
+                        tasks += repeatingTask(20) {
+                            val timeLeft = "<aqua>ᴛɪᴍᴇ ʟᴇꜰᴛ: <red><b>${gameTime}".style()
+                            Bukkit.getOnlinePlayers()
+                                .forEach { eventController().sidebarManager.updateLines(it, listOf(Component.empty(), timeLeft)) }
+
+                            gameTime--
+                            if (gameTime <= 0) endGame()
+                        }
+
+                        ChristmasEventPlugin.instance.eventController.sidebarManager.dataSupplier = scores
                     }
                 }
-            } // autocorrect armor stand rotation to boat rotation
-
-            tasks += repeatingTask(40) {
-                Util.runAction(PlayerType.PARTICIPANT) { it.sendActionBar("<game_colour>ᴘʀᴇss <#6b6b6b><b><key:key.sneak></b></#6b6b6b> ᴛᴏ ʀᴇsᴇᴛ ᴛᴏ ʏᴏᴜʀ ᴄʜᴇᴄᴋᴘᴏɪɴᴛ".style()) }
             }
-
-            tasks += repeatingTask(20) {
-                val timeLeft = "<aqua>ᴛɪᴍᴇ ʟᴇꜰᴛ: <red><b>${gameTime}".style()
-                Bukkit.getOnlinePlayers().forEach { eventController().sidebarManager.updateLines(it, listOf(Component.empty(), timeLeft)) }
-
-                gameTime--
-                if (gameTime <= 0) endGame()
-            }
-
-            ChristmasEventPlugin.instance.eventController.sidebarManager.dataSupplier = scores
         }
     }
 
@@ -105,13 +120,16 @@ class SledRacing : EventMiniGame(GameConfig.SLED_RACING) {
         tasks.forEach { it?.cancel() } // this will cancel all game tasks.
         donationEventsEnabled = false
 
-        scores.entries.sortedBy { it.value }.take(3).forEachIndexed { index, (uuid, _) ->
+        scores.entries.sortedByDescending { it.value }.take(3).forEachIndexed { index, (uuid, _) ->
             if (index == 0) {
                 formattedWinners.putIfAbsent(uuid, "1sᴛ ᴘʟᴀᴄᴇ")
+                eventController().addPoints(uuid, 15)
             } else if (index == 1) {
                 formattedWinners.putIfAbsent(uuid, "2ɴᴅ ᴘʟᴀᴄᴇ")
+                eventController().addPoints(uuid, 10)
             } else if (index == 2) {
                 formattedWinners.putIfAbsent(uuid, "3ʀᴅ ᴘʟᴀᴄᴇ")
+                eventController().addPoints(uuid, 5)
             }
         }
 
@@ -130,7 +148,7 @@ class SledRacing : EventMiniGame(GameConfig.SLED_RACING) {
             titleTimes(Duration.ZERO, Duration.ofSeconds(2), Duration.ofMillis(500))
         )
         player.playSound(Sound.ITEM_LODESTONE_COMPASS_LOCK)
-        scores[playerUUID] = scores.getOrDefault(playerUUID, 0) + 1
+        scores[playerUUID] = scores.getOrDefault(playerUUID, 0) + 5
     }
 
     private fun handleFinishLineCross(player: Player) {

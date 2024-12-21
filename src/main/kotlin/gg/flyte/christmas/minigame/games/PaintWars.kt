@@ -182,7 +182,7 @@ class PaintWars : EventMiniGame(GameConfig.PAINT_WARS) {
         changedBlocks.forEach { it.type = Material.WHITE_WOOL }
         playerBrushesBiMap.clear()
         changedBlocks.clear()
-        for (entry in scores) eventController().addPoints(entry.key, entry.value)
+        for (entry in scores) eventController().addPoints(entry.key, (entry.value / 100).coerceAtLeast(0))
 
         scores.entries
             .sortedByDescending { it.value }
@@ -193,9 +193,7 @@ class PaintWars : EventMiniGame(GameConfig.PAINT_WARS) {
                 }
             }
 
-        Util.runAction(PlayerType.PARTICIPANT) {
-            it.hideBossBar(rapidFireBossBar)
-        }
+        Util.runAction(PlayerType.PARTICIPANT) { it.hideBossBar(rapidFireBossBar) }
 
         super.endGame()
     }
