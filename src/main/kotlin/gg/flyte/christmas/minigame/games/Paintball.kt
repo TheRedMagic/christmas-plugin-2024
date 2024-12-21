@@ -109,7 +109,7 @@ class Paintball : EventMiniGame(GameConfig.PAINTBALL) {
     }
 
     override fun startGame() {
-        spawnCamaraPoints()
+        super.startGame()
         eventController().sidebarManager.dataSupplier = scores
         simpleCountdown {
             started = true

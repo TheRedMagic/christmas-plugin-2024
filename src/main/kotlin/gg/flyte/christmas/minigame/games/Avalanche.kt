@@ -107,8 +107,11 @@ class Avalanche : EventMiniGame(GameConfig.AVALANCHE) {
         player.getAttribute(Attribute.SCALE)?.baseValue = 0.85
     }
 
+
+
+
     override fun startGame() {
-        spawnCamaraPoints()
+        super.startGame()
         overviewTask.cancel()
         ChristmasEventPlugin.instance.serverWorld.entities.forEach { if (it is Snowball) it.remove() }
         simpleCountdown {

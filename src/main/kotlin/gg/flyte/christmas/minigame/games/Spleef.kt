@@ -98,7 +98,7 @@ class Spleef : EventMiniGame(GameConfig.SPLEEF) {
     }
 
     override fun startGame() {
-        spawnCamaraPoints()
+        super.startGame()
         overviewTasks.forEach { it.cancel() }
         donationEventsEnabled = true
 

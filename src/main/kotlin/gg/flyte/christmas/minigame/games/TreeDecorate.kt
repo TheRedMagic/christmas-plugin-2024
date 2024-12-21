@@ -57,7 +57,7 @@ class TreeDecorate : EventMiniGame(GameConfig.TREE_DECORATE) {
     }
 
     override fun startGame() {
-        spawnCamaraPoints()
+        super.startGame()
         donationEventsEnabled = true
 
         Util.runAction(PlayerType.PARTICIPANT) {

@@ -154,7 +154,7 @@ class PaintWars : EventMiniGame(GameConfig.PAINT_WARS) {
     }
 
     override fun startGame() {
-        spawnCamaraPoints()
+        super.startGame()
         eventController().sidebarManager.dataSupplier = scores
 
         simpleCountdown {

@@ -76,7 +76,7 @@ class KingHill : EventMiniGame(GameConfig.KING_OF_THE_HILL) {
     }
 
     override fun startGame() {
-        spawnCamaraPoints()
+        super.startGame()
         simpleCountdown {
             donationEventsEnabled = true
             pvpEnabled = true

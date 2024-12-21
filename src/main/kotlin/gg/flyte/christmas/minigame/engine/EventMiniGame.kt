@@ -43,16 +43,7 @@ abstract class EventMiniGame(val gameConfig: GameConfig) {
     val spectateEntities = mutableMapOf<Int, Entity>()
     var state: GameState = GameState.IDLE
 
-    /**
-     * Initialises the game's spectator entities, which are used to allow players to spectate the game.
-     */
-    fun spawnCamaraPoints() {
-        for ((index, point) in gameConfig.spectatorCameraLocations.withIndex()) {
-            spectateEntities[index] = ChristmasEventPlugin.instance.serverWorld.spawn(point, ItemDisplay::class.java) {
-                it.setItemStack(ItemStack(Material.AIR))
-            }
-        }
-    }
+
 
     /**
      * Starts the game's map overview. This is done through smoothened camera
@@ -130,7 +121,13 @@ abstract class EventMiniGame(val gameConfig: GameConfig) {
      * Called when a game is ready to start.
      * Exclusive of the countdown or any pre-game setup.
      */
-    abstract fun startGame()
+    open fun startGame() {
+        for ((index, point) in gameConfig.spectatorCameraLocations.withIndex()) {
+            spectateEntities[index] = ChristmasEventPlugin.instance.serverWorld.spawn(point, ItemDisplay::class.java) {
+                it.setItemStack(ItemStack(Material.AIR))
+            }
+        }
+    }
 
     /**
      * As the super-class, this only handles game logic for player elimination.
