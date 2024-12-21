@@ -219,7 +219,7 @@ class Spleef : EventMiniGame(GameConfig.SPLEEF) {
 
         super.eliminate(player, reason)
 
-        val value = "$gameTime ѕᴇᴄᴏɴᴅ${if (gameTime > 1) "ѕ" else ""}"
+        val value = "$gameTime ѕᴇᴄᴏɴᴅ${if (gameTime == 1) "" else "s"}"
         when (remainingPlayers().size) {
             1 -> {
                 formattedWinners[player.uniqueId] = value
@@ -262,7 +262,8 @@ class Spleef : EventMiniGame(GameConfig.SPLEEF) {
                 if (unlimitedJumps()) {
                     it.sendActionBar("<gold><b>ᴜɴʟɪᴍɪᴛᴇᴅ<reset> <game_colour>ᴅᴏᴜʙʟᴇ ᴊᴜᴍᴘs!".style())
                 } else if (doubleJumps[it.uniqueId]!! > 0) {
-                    it.sendActionBar("<green><b>${doubleJumps[it.uniqueId]!!} <reset><game_colour>ᴅᴏᴜʙʟᴇ ᴊᴜᴍᴘs ʟᴇꜰᴛ!".style())
+                    val plural = if (doubleJumps[it.uniqueId]!! > 1) "s" else ""
+                    it.sendActionBar("<green><b>${doubleJumps[it.uniqueId]!!} <reset><game_colour>ᴅᴏᴜʙʟᴇ ᴊᴜᴍᴘ$plural ʟᴇꜰᴛ!".style())
                 } else {
                     it.sendActionBar("<red><b>0 <reset><game_colour>ᴅᴏᴜʙʟᴇ ᴊᴜᴍᴘs ʟᴇꜰᴛ!".style())
                 }
@@ -563,8 +564,9 @@ class Spleef : EventMiniGame(GameConfig.SPLEEF) {
                 cancel()
                 remainingPlayers().forEach { it.sendMessage(meltedText) }
             } else {
+                val plural = if (countdown == 1) "" else "s"
                 remainingPlayers().forEach {
-                    it.sendMessage("<red><b>Tʜᴇ ʙᴏᴛᴛᴏᴍ ʟᴀʏᴇʀ ᴡɪʟʟ ᴍᴇʟᴛ ɪɴ <aqua>$countdown</aqua> sᴇᴄᴏɴᴅs!".style())
+                    it.sendMessage("<red><b>Tʜᴇ ʙᴏᴛᴛᴏᴍ ʟᴀʏᴇʀ ᴡɪʟʟ ᴍᴇʟᴛ ɪɴ <aqua>$countdown</aqua> sᴇᴄᴏɴᴅ$plural!".style())
                 }
                 countdown--
             }
