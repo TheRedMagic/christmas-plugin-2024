@@ -74,6 +74,7 @@ class SledRacing : EventMiniGame(GameConfig.SLED_RACING) {
     }
 
     override fun startGame() {
+        spawnCamaraPoints()
         remainingPlayers().forEachIndexed { index, player ->
             player.walkSpeed = 0F
             player.title(

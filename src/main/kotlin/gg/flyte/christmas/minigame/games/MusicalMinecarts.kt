@@ -87,6 +87,7 @@ class MusicalMinecarts : EventMiniGame(GameConfig.MUSICAL_MINECARTS) {
     }
 
     override fun startGame() {
+        spawnCamaraPoints()
         overviewTasks.forEach { it.cancel() }
         minecarts.forEach { it.remove() }.also { minecarts.clear() }
 

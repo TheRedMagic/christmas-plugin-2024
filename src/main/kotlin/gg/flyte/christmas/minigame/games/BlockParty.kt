@@ -106,6 +106,7 @@ class BlockParty() : EventMiniGame(GameConfig.BLOCK_PARTY) {
     }
 
     override fun startGame() {
+        spawnCamaraPoints()
         overviewTask.cancel()
         simpleCountdown {
             newRound()

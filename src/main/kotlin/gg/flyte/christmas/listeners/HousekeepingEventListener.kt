@@ -357,6 +357,7 @@ class HousekeepingEventListener : Listener, PacketListener {
                 .onClick { whoClicked, _, _, _ ->
                     val requestedCameraEntity = eventController().currentGame!!.spectateEntities[i]
                     whoClicked.gameMode = GameMode.SPECTATOR
+                    whoClicked.teleport(requestedCameraEntity!!.location)
                     whoClicked.spectatorTarget = requestedCameraEntity
                     whoClicked.closeInventory()
                 }

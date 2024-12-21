@@ -62,6 +62,7 @@ class BaubleTag : EventMiniGame(GameConfig.BAUBLE_TAG) {
     }
 
     override fun startGame() {
+        spawnCamaraPoints()
         simpleCountdown {
             newRound()
             manageActionBars()
